@@ -1,6 +1,7 @@
 package com.fatemorgan.ocr.endpoints;
 
 import com.fatemorgan.ocr.dto.ErrorDTO;
+import com.fatemorgan.ocr.tools.ImageProcessor;
 import com.fatemorgan.ocr.tools.RecognitionService;
 import net.sourceforge.tess4j.TesseractException;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -48,9 +50,13 @@ public class OCRResource {
     @Consumes({"image/jpeg", "image/png", "image/gif", "image/svg+xml", "image/webp", "image/avif", "image/apng"})
     @Produces(MediaType.APPLICATION_JSON + "; charset=utf-8")
     public Response scanImage(@QueryParam("lang") @DefaultValue("eng") String lang,
+                              @QueryParam("resize") @DefaultValue("0") float multiplier,
+                              @QueryParam("smooth") @DefaultValue("false") boolean isSmooth,
                               InputStream input){
         try {
-            return Response.ok(recognitionService.scanImage(lang, input)).build();
+            BufferedImage bufferedImage = ImageProcessor.streamToImage(input);
+            if (multiplier > 0) bufferedImage = ImageProcessor.resize(bufferedImage, multiplier, isSmooth);
+            return Response.ok(recognitionService.scanImage(lang, bufferedImage)).build();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             return Response.status(500).entity(new ErrorDTO(13, e.getMessage())).build();

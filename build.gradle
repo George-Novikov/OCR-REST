@@ -30,7 +30,6 @@ dependencies {
     compileOnly('javax.servlet:javax.servlet-api:4.0.1')
 
     implementation fileTree(dir: 'src/main/resources/libs', include: ['*.jar'])
-
     implementation 'com.github.jai-imageio:jai-imageio-core:1.4.0'
     implementation 'commons-io:commons-io:2.6'
     implementation 'net.java.dev.jna:jna:4.1.0'

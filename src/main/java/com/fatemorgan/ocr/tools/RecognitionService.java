@@ -8,11 +8,13 @@ import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +35,13 @@ public class RecognitionService {
         }
         return pagesContent;
     }
-    public String scanImage(String language, InputStream input) throws IOException, TesseractException {
+    public String scanImage(String language, BufferedImage bufferedImage) throws TesseractException {
         configureTesseract(language);
-        BufferedInputStream bufferStream = new BufferedInputStream(input);
-        BufferedImage bufferedImage = ImageIO.read(bufferStream);
         return TESSERACT.doOCR(bufferedImage);
     }
+
     private void configureTesseract(String language){
         File tessdata = LoadLibs.extractTessResources("tessdata");
-        //URL dataPath = getClass().getClassLoader().getResource("/tessdata/" + language + ".traineddata");
-        //File tessdata = new File(dataPath.getFile());
         TESSERACT.setDatapath(tessdata.getParent());
         TESSERACT.setLanguage(language);
     }

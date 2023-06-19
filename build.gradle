@@ -4,13 +4,13 @@ plugins {
 }
 
 group 'com.fatemorgan'
-//version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    maven{
-        url 'https://mvnrepository.com/artifact/net.sourceforge.tess4j/tess4j'
-    }
+//    maven{
+//        url 'https://mvnrepository.com/artifact/net.sourceforge.tess4j/tess4j'
+//    }
+
 }
 
 ext {
@@ -29,8 +29,31 @@ dependencies {
     compileOnly('javax.ws.rs:javax.ws.rs-api:2.1.1')
     compileOnly('javax.servlet:javax.servlet-api:4.0.1')
 
-    implementation 'net.sourceforge.tess4j:tess4j:3.4.8'
+    implementation fileTree(dir: 'src/main/resources/libs', include: ['*.jar'])
 
+    implementation 'com.github.jai-imageio:jai-imageio-core:1.4.0'
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'net.java.dev.jna:jna:4.1.0'
+    implementation 'net.sourceforge.lept4j:lept4j:1.6.4'
+    implementation 'org.apache.pdfbox:pdfbox:2.0.9'
+    implementation 'org.apache.pdfbox:pdfbox-tools:2.0.9'
+    implementation 'org.ghost4j:ghost4j:1.0.1'
+    implementation 'org.jboss:jboss-vfs:3.2.12.Final'
+    implementation 'org.slf4j:jul-to-slf4j:1.7.25'
+    implementation 'org.slf4j:jcl-over-slf4j:1.7.25'
+    implementation 'org.slf4j:log4j-over-slf4j:1.7.25'
+
+    //implementation 'org.slf4j:slf4j-api:1.7.25'
+    //implementation 'org.apache.pdfbox:pdfbox:2.0.28'
+
+    //implementation files('pdfbox-2.0.28.jar')
+    //implementation files('tess4j-3.4.8.jar')
+
+    //implementation 'net.sourceforge.tess4j:tess4j:3.4.8'
+    //implementation 'net.sourceforge.tess4j:tess4j:4.0.0'
+    //implementation 'net.sourceforge.tess4j:tess4j:5.7.0'
+
+    testImplementation 'ch.qos.logback:logback-classic:1.2.3'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }

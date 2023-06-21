@@ -21,7 +21,7 @@ import java.util.List;
 public class RecognitionService {
     private static final Tesseract TESSERACT = new Tesseract();
 
-    public List<String> scanPDF(String language, int dpi, InputStream input) throws IOException, TesseractException {
+    public List<String> scanPDF(String language, int dpi, float resizeMultiplier, InputStream input) throws IOException, TesseractException {
         configureTesseract(language);
 
         PDDocument document = PDDocument.load(input);
@@ -31,6 +31,7 @@ public class RecognitionService {
         List<String> pagesContent = new ArrayList<>();
         for (int i = 0; i < pagesNumber; i++){
             BufferedImage bufferedPage = renderer.renderImageWithDPI(i, dpi, ImageType.RGB);
+            if (resizeMultiplier != 0) bufferedPage = ImageProcessor.resize(bufferedPage, resizeMultiplier, false);
             pagesContent.add(TESSERACT.doOCR(bufferedPage));
         }
         return pagesContent;

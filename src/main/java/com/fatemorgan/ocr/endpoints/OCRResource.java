@@ -30,9 +30,10 @@ public class OCRResource {
     @Produces(MediaType.APPLICATION_JSON + "; charset=utf-8")
     public Response scanPDF(@QueryParam("lang") @DefaultValue("eng") String lang,
                             @QueryParam("dpi") @DefaultValue("72") int dpi,
+                            @QueryParam("resize") @DefaultValue("0") float multiplier,
                             InputStream input){
         try {
-            return Response.ok(recognitionService.scanPDF(lang, dpi, input)).build();
+            return Response.ok(recognitionService.scanPDF(lang, dpi, multiplier, input)).build();
         } catch (IOException ioe){
             LOGGER.error(ioe.getMessage(), ioe);
             return Response.status(500).entity(new ErrorDTO(13, "Ошибка преобразования файла: " + ioe.getMessage())).build();

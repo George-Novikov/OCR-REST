@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,9 +32,10 @@ public class OCRResource {
     public Response scanPDF(@QueryParam("lang") @DefaultValue("eng") String lang,
                             @QueryParam("dpi") @DefaultValue("72") int dpi,
                             @QueryParam("resize") @DefaultValue("0") float multiplier,
+                            @QueryParam("sharpen") @DefaultValue("false") boolean isSharp,
                             InputStream input){
         try {
-            return Response.ok(recognitionService.scanPDF(lang, dpi, multiplier, input)).build();
+            return Response.ok(recognitionService.scanPDF(lang, dpi, multiplier, isSharp, input)).build();
         } catch (IOException ioe){
             LOGGER.error(ioe.getMessage(), ioe);
             return Response.status(500).entity(new ErrorDTO(13, "Ошибка преобразования файла: " + ioe.getMessage())).build();
@@ -53,10 +55,12 @@ public class OCRResource {
     public Response scanImage(@QueryParam("lang") @DefaultValue("eng") String lang,
                               @QueryParam("resize") @DefaultValue("0") float multiplier,
                               @QueryParam("smooth") @DefaultValue("false") boolean isSmooth,
+                              @QueryParam("sharpen") @DefaultValue("false") boolean isSharp,
                               InputStream input){
         try {
             BufferedImage bufferedImage = ImageProcessor.streamToImage(input);
             if (multiplier > 0) bufferedImage = ImageProcessor.resize(bufferedImage, multiplier, isSmooth);
+            if (isSharp) bufferedImage = ImageProcessor.sharpen(bufferedImage);
             return Response.ok(recognitionService.scanImage(lang, bufferedImage)).build();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

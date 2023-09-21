@@ -45,7 +45,13 @@ public class RecognitionService {
 
     private void configureTesseract(String language){
         File tessdata = LoadLibs.extractTessResources("tessdata");
-        TESSERACT.setDatapath(tessdata.getParent());
+
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("nix") || os.contains("nux")){
+            TESSERACT.setDatapath("/usr/share/tesseract-ocr/4.00/tessdata");
+        } else {
+            TESSERACT.setDatapath(tessdata.getParent());
+        }
         TESSERACT.setLanguage(language);
     }
 }
